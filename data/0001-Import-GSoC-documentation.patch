@@ -1,0 +1,280 @@
+From aa8fe2938748e808c1e975f2ec93b468c327fa2e Mon Sep 17 00:00:00 2001
+From: Myrto Georgopoulou <myrto.georgopoulou@gmail.com>
+Date: Fri, 25 Aug 2023 11:00:30 +0300
+Subject: [PATCH] Import GSoC documentation
+
+---
+ _config.yml                    |  2 +-
+ documentation/aliases.md       |  5 +++-
+ documentation/global-groups.md |  8 +++--
+ documentation/groups.md        |  3 ++
+ documentation/index.md         |  4 +--
+ documentation/ltsp-groups.md   | 55 ++++++++++++++++++++++++++++++++++
+ documentation/ppa.md           |  2 +-
+ documentation/run-fat.md       | 46 +++++++++++++---------------
+ index.md                       |  2 +-
+ sponsoring.md                  |  2 +-
+ 10 files changed, 94 insertions(+), 35 deletions(-)
+ create mode 100644 documentation/ltsp-groups.md
+
+diff --git a/_config.yml b/_config.yml
+index 2cb8b32..00c0f57 100644
+--- a/_config.yml
++++ b/_config.yml
+@@ -26,7 +26,7 @@ aux_links:
+     - "//github.com/epoptes/epoptes"
+
+ # Footer content appears at the bottom of every page's main content
+-footer_content: "Copyright &copy; 2010-2022 the <a href=\"https://github.com/epoptes/epoptes/graphs/contributors\">Epoptes developers</a>"
++footer_content: "Copyright &copy; 2010-2023 the <a href=\"https://github.com/epoptes/epoptes/graphs/contributors\">Epoptes developers</a>"
+
+ # Color scheme currently only supports "dark" or nil (default)
+ color_scheme: nil
+diff --git a/documentation/aliases.md b/documentation/aliases.md
+index 0468080..688ff4a 100644
+--- a/documentation/aliases.md
++++ b/documentation/aliases.md
+@@ -4,6 +4,9 @@ parent: Documentation
+
+ # Client aliases
+
++> 💡 **Tip:**
++  If using LTSP, see also [ltsp.conf groups](ltsp-groups.md).
++
+ In some environments, clients have appropriate hostnames, e.g. client01,
+ library02, lab03... Unfortunately in some setups that's not easily
+ accomplished, and the clients get random hostnames like ltsp123, based on the
+@@ -14,7 +17,7 @@ random, the alias will always be the same, because it matches the MAC address
+ of the client, not its IP.
+
+ To create an alias, first [create a group](groups.md) and add the client in it;
+-then right-click a client, select Properties and then click on the button with
++then right-click a client, select Information and then click on the button with
+ the pencil icon.
+
+ ![Aliases](aliases.png)
+diff --git a/documentation/global-groups.md b/documentation/global-groups.md
+index 8ed504b..6339ecd 100644
+--- a/documentation/global-groups.md
++++ b/documentation/global-groups.md
+@@ -4,9 +4,12 @@ parent: Documentation
+
+ # Global groups
+
++> 💡 **Tip:**
++  If using LTSP, see also [ltsp.conf groups](ltsp-groups.md).
++
+ Suppose that a school has 5 computer labs and 50 teachers. It would be tiresome
+ if each teacher had to manually [create Epoptes groups](groups.md) for these
+-labs. The following solution is provided in recent Epoptes versions:
++labs. The following solution is provided:
+
+ 1.  Login as the school "administrator" (it can be one of the teachers) and run
+     Epoptes at least once so that the ~/.config/epoptes/groups.json file gets
+@@ -29,5 +32,4 @@ clients, for example staff PCs, from everyone except the administrator. To do
+ this, the administrator just needs to create a group named "X-Hidden" and to
+ drag the clients he wants in it. The teachers won't be seeing those clients
+ anymore, nor the "X-Hidden" group. Multiple hidden groups are also supported,
+-as long as their names start with "X-Hidden". Thanks to Rolf-Werner Eilert for
+-sponsoring this feature!
++as long as their names start with "X-Hidden".
+diff --git a/documentation/groups.md b/documentation/groups.md
+index c553b29..66cac97 100644
+--- a/documentation/groups.md
++++ b/documentation/groups.md
+@@ -4,6 +4,9 @@ parent: Documentation
+
+ # Working with groups
+
++> 💡 **Tip:**
++  If using LTSP, see also [ltsp.conf groups](ltsp-groups.md).
++
+ You can create and use groups in Epoptes for a number of reasons:
+
+ - To organize and manage groups of workstations. For example, a school may have a single LTSP server serving 4 classrooms. Teachers using Epoptes would create 4 groups and drag 'n' drop clients from the Detected computers group to the respective classroom groups.
+diff --git a/documentation/index.md b/documentation/index.md
+index 9293ae6..488fbf6 100644
+--- a/documentation/index.md
++++ b/documentation/index.md
+@@ -6,8 +6,8 @@ nav_order: 10
+ # Documentation
+
+ Search the following table of contents for the topic you're interested in.
+-[Client aliases](aliases.md) and [Working with groups](groups.md) are good
+-places to start.
++[Client aliases](aliases.md), [Working with groups](groups.md) and [ltsp.conf
++groups](ltsp-groups.md) are good places to start.
+
+ Documentation contributors are most welcome, please contact us in the [chat
+ room](https://ltsp.org/guides/chat-room/) for details.
+diff --git a/documentation/ltsp-groups.md b/documentation/ltsp-groups.md
+new file mode 100644
+index 0000000..d2ed445
+--- /dev/null
++++ b/documentation/ltsp-groups.md
+@@ -0,0 +1,55 @@
++---
++parent: Documentation
++---
++
++# ltsp.conf groups
++
++In [LTSP based computer labs](https://ltsp.org), an alternative way to define
++[global groups](global-groups.md) and [aliases](aliases.md) is to use the
++following `/etc/ltsp/ltsp.conf` structure. Note that a recent Epoptes version
++is required (>= 23.08):
++
++```shell
++[server]
++...
++
++[common]
++...
++
++[clients]
++...
++
++# EPOPTES_GROUP=Lab A
++[01:02:03:04:05:a1]
++HOSTNAME=a01
++
++[01:02:03:04:05:a2]
++HOSTNAME=a02
++...
++
++# EPOPTES_GROUP=Lab B
++[01:02:03:04:05:b1]
++HOSTNAME=b01
++
++[01:02:03:04:05:b2]
++HOSTNAME=b02
++...
++
++# EPOPTES_GROUP=X-Hidden-Staff
++[01:02:03:04:05:c1]
++HOSTNAME=staff01
++
++[01:02:03:04:05:b2]
++HOSTNAME=staff02
++...
++
++# EPOPTES_GROUP=None
++```
++
++- I.e. the line `# EPOPTES_GROUP=Lab A` means that the HOSTNAMEs defined in
++subsequent [mac address] sections will be displayed as a group named `Lab A`.
++- The same goes for `Lab B`.
++- Note that if a group name starts with `X-Hidden-`, then this group won't
++appear at all in the Epoptes UI, so you can e.g. hide the staff PCs that way.
++- Finally, HOSTNAMEs under `EPOPTES_GROUP=None` will be displayed in the
++`Autodetected` group but not in any named group.
+diff --git a/documentation/ppa.md b/documentation/ppa.md
+index 96ed5c0..e1b4af9 100644
+--- a/documentation/ppa.md
++++ b/documentation/ppa.md
+@@ -4,7 +4,7 @@ parent: Documentation
+
+ # Personal Package Archives
+
+-Epoptes packages are available in the stock repositories of many Linux distributions, such as Ubuntu, Debian, openSUSE etc. However, for Ubuntu, there are also two Personal Package Archives (PPAs) available:
++Epoptes packages are available in the stock repositories of many Linux distributions, such as Ubuntu, Debian, ArchLinux etc. However, for Ubuntu, there are also two Personal Package Archives (PPAs) available:
+
+ - [Epoptes stable repository](https://launchpad.net/~epoptes/+archive/ubuntu/ppa): it contains the most recent stable epoptes releases for all supported Ubuntu versions.
+ - [Epoptes proposed repository](https://launchpad.net/~epoptes/+archive/ubuntu/proposed): it contains prerelease epoptes packages for testing purposes.
+diff --git a/documentation/run-fat.md b/documentation/run-fat.md
+index cf0b38b..21be7b6 100644
+--- a/documentation/run-fat.md
++++ b/documentation/run-fat.md
+@@ -2,42 +2,38 @@
+ parent: Documentation
+ ---
+
+-# Running from a fat client
++# Running from LTSP fat clients
+
+-This page assumes that you already have a working LTSP installation, with the epoptes package installed in the LTSP server and epoptes-client in the image, as described in the [LTSP installation page](https://ltsp.org/docs/installation/).
++In recent Epoptes versions (>= 23.08), it's possible to run `epoptes` from any
++LTSP fat client, and seamlessly control all epoptes-clients in the same subnet.
++This is automatically accomplished using the following logic:
+
+-Now suppose that your LTSP server is headless, and that it serves 3 computer labs. How would Epoptes operators in each lab run it in that case? Two solutions called "Remotely" and "Locally" are presented below. The following table compares them:
++- If epoptes-daemon isn't running locally, and this is an LTSP client, then
++  `ltsp remoteapps` is used to connect to the remote epoptes-daemon running on
++  the LTSP server, via SSH.
++- Client thumbnails, command execution etc all happen through the SSH channel.
++- But certain features that need additional performance, such as screen
++  broadcasting and monitoring, LAN benchmark etc, are performed directly and
++  not via the LTSP server. These features will then only work if the "teacher
++  PC" is in the same IP subnet as the "student PCs".
+
+-| Question | Remotely | Locally |
+-|--|--|--|
+-| Where does the Epoptes GUI run? | In the LTSP server |  In an "epoptes PC" per lab |
+-| Which epoptes-clients are seen? | All | Only the ones in the current lab |
+-| Is screen broadcasting fast? | No, it goes via the server |  Yes, it uses direct connections |
+-| Is it secure? | Yes | Somewhat |
+-
+-So "locally" is better in all cases, except for security, as then the Epoptes private key gets exposed to the local network, allowing man-in-the-middle attacks but not network sniffing.
++For older Epoptes versions or for some specific use cases, there are two other
++ways to run `epoptes` in an LTSP fat client, described below.
+
+ ## Remotely
+
+-Remotely means to connect to the LTSP server and launch the Epoptes GUI there, similarly to `ltsp-remoteapps epoptes` in the older LTSP5. Since the new LTSP doesn't support remote apps, the following steps are needed. First, put the following in ltsp.conf, run `ltsp initrd`, and reboot the clients:
++It's possible to launch the Epoptes GUI remotely on the LTSP server using the
++`ltsp remoteapps epoptes` LTSP command. To do that, put the following in
++ltsp.conf, run `ltsp initrd`, and reboot the clients:
+
+ ```shell
+ [clients]
+-POST_INIT_EPOPTES="sed 's|^Exec=/usr/bin/epoptes|Exec=ssh -X server dbus-launch epoptes|' -i /usr/share/applications/epoptes.desktop"
+-```
+-
+-Then, tell all the users in the epoptes group to login to an LTSP client, and to run the following commands once:
+-
+-```shell
+-# Generate an SSH key if it doesn't already exist:
+-test -f ~/.ssh/id_rsa || ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+-# Enable "passwordless SSH" by trusting the key:
+-install -m 0600 ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+-# Connect to the LTSP server once, in order to trust the server as well:
+-ssh -X server x-terminal-emulator
++POST_INIT_EPOPTES="sed 's|^Exec=/usr/bin/epoptes|Exec=ltsp remoteapps epoptes|' -i /usr/share/applications/epoptes.desktop"
+ ```
+
+-After that, they should be able to run Epoptes as usual, from the system menu.
++After that, they should be able to run Epoptes as usual, from the system menu,
++although all VNC traffic will go through the SSH tunnel and it will be quite
++slow.
+
+ ## Locally
+
+diff --git a/index.md b/index.md
+index bab8c3b..4a3979f 100644
+--- a/index.md
++++ b/index.md
+@@ -6,7 +6,7 @@ nav_order: 1
+
+ Epoptes ([Επόπτης](epoptes.mp3) - a Greek word for overseer) is an [open source](https://gplv3.fsf.org) computer lab management and monitoring tool. It allows for screen broadcasting and monitoring, remote command execution, message sending, imposing restrictions like screen locking or sound muting the clients and much more!
+
+-It can be installed in [Ubuntu](https://packages.ubuntu.com/epoptes), [Debian](https://packages.debian.org/epoptes) and [openSUSE](https://software.opensuse.org/package/epoptes) based labs that may contain any combination of the following: [LTSP](https://ltsp.org) servers, thin and fat clients, non LTSP servers, standalone workstations, [FreeRDP](https://www.freerdp.com/) or [X2Go](https://wiki.x2go.org) clients etc. Patches for other distros are welcome.
++It can be installed in [Ubuntu](https://packages.ubuntu.com/epoptes), [Debian](https://packages.debian.org/epoptes), [RPM](https://github.com/epoptes/epoptes/releases) and [ArchLinux](https://aur.archlinux.org/pkgbase/epoptes-client) based computer labs that may contain any combination of the following: [LTSP](https://ltsp.org) servers, thin and fat clients, non LTSP servers, standalone workstations, [FreeRDP](https://www.freerdp.com/) or [X2Go](https://wiki.x2go.org) clients etc. Patches for other distros are welcome.
+
+ Epoptes has been translated into more than [40 languages](https://translations.launchpad.net/epoptes) and it's being used in many installations all around the world. It's considered mature and periodically new features are added like the recent Python3 / Gtk3 support. It's maintained by IT teachers that use it in their classrooms, so it should be around for a long time!
+
+diff --git a/sponsoring.md b/sponsoring.md
+index b6085cd..f7bab23 100644
+--- a/sponsoring.md
++++ b/sponsoring.md
+@@ -6,7 +6,7 @@ nav_order: 5
+
+ <a href="https://ts.sch.gr"><img src="/ts.png" alt="ts" width="80" height="60" align="right"></a>Epoptes development is currently sponsored by [Greek Government Public Investments Program](http://www.ggea.gr) run by the [Computer Technology Institute and Press DIOPHANTUS](https://www.cti.gr/en) and assigned to the [Greek Schools Technical Support team](https://ts.sch.gr).
+
+-The Python3/Gtk3 rewrite was part of a [Google Summer of Code 2018 project](https://github.com/eellak/gsoc2018-epoptes/wiki).
++A lot of Epoptes improvements landed during a [Google Summer of Code 2023 project](https://github.com/epoptes/epoptes/pull/204), and the Python3/Gtk3 rewrite was part of a [GSoC 2018 project](https://github.com/eellak/gsoc2018-epoptes/wiki).
+
+ During 2011 - 2015 it was sponsored by [NSRF 2007 - 2013 Program](http://2007-2013.espa.gr/en/Pages/staticWhatIsESPA.aspx) run by the [Computer Technology Institute and Press DIOPHANTUS](https://www.cti.gr/en) under the [Hellenic School Technical Support Action](https://ts.sch.gr/) of [Stirizo Project](https://www.cti.gr/en/activities-en/development-projects-en/item/63-stirizw/63-stirizw).
+
+--
+2.34.1
+

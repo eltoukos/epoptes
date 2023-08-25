@@ -536,3 +536,8 @@ Implement uptime_ and journal functions.
 ### 2023-08-21
 
 Create [pull request](https://github.com/epoptes/epoptes/pull/204) to merge the upstreamable parts of the Epoptes Improvements projects.
+
+### 2023-08-25
+
+Submit [documentation update for
+epoptes.org](data/0001-Import-GSoC-documentation.patch).
